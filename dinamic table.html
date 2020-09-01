@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+    <div style="overflow: scroll;">
+        <form>
+            <table class="table" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <!--<th>Date</th>-->
+    
+                        <th>Types of Work</th>
+                        <th>Date Assigned</th>
+                        <th>Date Due</th>
+                        <th>Priority</th>
+                        <th>Frequency</th>
+                        <th>Company</th>
+                        <th>Description of Process</th>
+                        <th>Second in Charge</th>
+                        <th>Assigned By</th>
+                        <th>Comments</th>
+                        <th>Question</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="checkbox" name="chk" /></td>
+                        <!-- <td><input type="text" name="date[]" value="" /></td>-->
+                        <td><input type="text" name="work[]" value="" class="task" />
+                            <span class="text-danger"><?php echo form_error('work[]');?></span>
+                        </td>
+                        <td><input type="text" name="assigned_date[]" value="" id="assigned_date" class="assigned_date" />
+                            <span class="text-danger"><?php echo form_error('assigned_date[]');?></span>
+                        </td>
+                        <td><input type="text" name="last_date[]" value="" id="last_date" class="last_date" />
+                            <span class="text-danger"><?php echo form_error('last_date[]');?></span>
+                        </td>
+                        <td><input type="text" name="priority[]" value="" />
+                            <span class="text-danger"><?php echo form_error('priority[]');?></span>
+                        </td>
+                        <td><input type="text" name="frequency[]" value="" />
+                            <span class="text-danger"><?php echo form_error('frequency[]');?></span>
+                        </td>
+                        <td><input type="text" name="company[]" value="" />
+                            <span class="text-danger"><?php echo form_error('company[]');?></span>
+                        </td>
+                        <td><input type="text" name="description[]" value="" />
+                            <span class="text-danger"><?php echo form_error('description[]');?></span>
+                        </td>
+                        <td><input type="text" name="s_incharge[]" value="" />
+                            <span class="text-danger"><?php echo form_error('s_incharge[]');?></span>
+                        </td>
+                        <td><input type="text" name="assigned_by[]" value="" />
+                            <span class="text-danger"><?php echo form_error('assigned_by[]');?></span>
+                        </td>
+                        <td><input type="text" name="comments[]" value="" />
+                        </td>
+                        <td><input type="text" name="question[]" value="" />
+                        </td>
+                    </tr>
+    
+                </tbody>
+            </table>
+            <input class="btn btn-primary" type="button" value="Add Row" onclick="addRow('dataTable')" id="add_button" />
+            <input class="btn btn-primary" type="button" value="Delete Row" onclick="deleteRow('dataTable')" />
+            <input class="btn btn-primary" type="submit" name="submit" value="submit">
+        </form>
+    
+    </div>
+    <script>
+         function addRow(tableID) {
+                $(".last_date").datepicker("destroy");
+                $(".assigned_date").datepicker("destroy");
+                var table = document.getElementById(tableID);
+
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
+
+                var colCount = table.rows[1].cells.length;
+
+                for (var i = 0; i < colCount; i++) {
+
+                    var newcell = row.insertCell(i);
+
+                    newcell.innerHTML = table.rows[1].cells[i].innerHTML;
+                    //alert(newcell.childNodes);
+                    switch (newcell.childNodes[0].type) {
+                        case "text":
+                            newcell.childNodes[0].value = "";
+                            break;
+                        case "checkbox":
+                            newcell.childNodes[0].checked = false;
+                            break;
+                        case "select-one":
+                            newcell.childNodes[0].selectedIndex = 0;
+                            break;
+
+                    }
+                }
+
+                var dateAssignedId = Math.round(new Date().getTime() + (Math.random() * 100));
+                var dateDueId = Math.round(new Date().getTime() + (Math.random() * 100));
+                $(row).find('.assigned_date')[0].id = dateAssignedId;
+                $(row).find('.last_date')[0].id = dateDueId;
+
+                $(".assigned_date").datepicker({ dateFormat: "yy-mm-dd" });
+                $(".last_date").datepicker({ dateFormat: "yy-mm-dd" });
+            }
+
+            function deleteRow(tableID) {
+                try {
+                    var table = document.getElementById(tableID);
+                    var rowCount = table.rows.length;
+
+                    for (var i = 0; i < rowCount; i++) {
+                        var row = table.rows[i];
+                        var chkbox = row.cells[0].childNodes[0];
+                        if (null != chkbox && true == chkbox.checked) {
+                            if (rowCount <= 2) {
+                                alert("Cannot delete all the rows.");
+                                break;
+                            }
+                            table.deleteRow(i);
+                            rowCount--;
+                            i--;
+                        }
+
+
+                    }
+                } catch (e) {
+                    alert(e);
+                }
+            }
+            $(function () {
+                $(".assigned_date").datepicker({ dateFormat: "yy-mm-dd" });
+                $(".last_date").datepicker({ dateFormat: "yy-mm-dd" });
+            });
+    </script>
+</body>
+</html>
